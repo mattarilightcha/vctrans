@@ -1,0 +1,82 @@
+# VC翻訳の設定。書き換えたらツールを起動し直す。
+# ふだんは操作の窓で変えればよい（変えた値は logs/settings.json に入り、こちらより優先する）。
+# ゲームごとの値（ゲーム名・exe・送るキー・聞き取りのヒント・用語集）は profiles/ のファイルにある。
+# 機器の名前は「vctrans.exe --devices」（Python なら python vctrans.py --devices）で出る。
+
+profile = "arc-raiders"       # profiles/ のファイル名（.toml を除く）。操作の窓の「はじめに」でも選べる
+
+[listen]                      # 相手の声
+vc_source = ""                # VC だけを聞くとき: ゲームの「ボイスチャットの出力デバイス」にした仮想ケーブルの録音側
+                              #   （例 "CABLE-A Output"）。空ならヘッドセットに流れる音をまるごと聞く（効果音・アナウンスも入る）
+forward = true                # vc_source の音をヘッドセットへ中継する（ツールを閉じると VC が聞こえなくなる）
+forward_device = ""           # 中継先。空なら既定の出力（ヘッドセット）
+forward_gain = 1.0            # 中継の音量
+device = ""                   # まるごと聞くときの機器。空なら既定の出力。名前の一部でもよい
+languages = ["en"]            # 訳す言語。中国語・韓国語も訳すなら ["en", "zh", "ko"]
+min_lang_prob = 0.5           # 言語の判定がこれより自信のないときは捨てる（雑音よけ）
+vad_threshold = 0.5           # 声とみなす強さ。銃声などを拾うなら上げる（0.6〜0.7）
+silence_ms = 700              # これだけ黙ったら 1 つの発言として訳す（短いと 1 つの文が細切れになる）
+max_segment_s = 12            # 長く話し続けたらここで区切る
+min_speech_ms = 300           # これより短い声は捨てる
+
+[speak]                       # 自分の声 → 英語の声で VC へ
+enabled = true
+ptt = "pad:right"             # 録るボタン。押している間の日本語を英訳する。コントローラーは "pad:right"（方向キー右）
+                              #   "pad:l3" など（PlayStation と Xbox の同じ場所のボタンは同じ名前）、マウスは x1 / x2 / middle、
+                              #   キーは "f8" "v" など。操作の窓の「押して決める」でも変えられる
+ptt_hold_ms = 500             # 録るボタンをこれだけ押しつづけたら録る（短く押しただけでは何もしない）
+send_mode = "auto"            # 英語の声の流し方（送るキーはプロファイルの send_key）
+                              #   auto: できたらツールが送るキーを押している間に流す（近接 VC とパーティの両方に届く）
+                              #   hold: 送るキーを自分で押している間に流す（ツールはキーを押さない）
+                              #   now : すぐ流す（オープンマイクの VC だけに届く）
+lead_ms = 250                 # auto で送るキーを押してから声を流すまで（ゲームがマイクを開く間）
+pending_s = 90                # hold で、これより前にできた英語は流さない
+save_voice = true             # 自分の録音を logs/voice/ に残す（自分の声の学習の材料。PC の中だけ）
+mute_while_recording = true   # 録るボタンを押している間は日本語の声を VC へ流さない
+mic_device = ""               # 空なら既定のマイク
+vc_device = "CABLE Input"     # 英語の声とふだんの声を流す先（ゲームのマイクは「CABLE Output」にする）
+passthrough = true            # ふだんの声もそのまま中継する（英語の声の間は止める）
+mic_gain = 1.0
+mute_mic_while_tts = true     # 英語の声が流れている間はマイクを止める
+engine = "windows"            # 英語の声の作り方: windows（Windows の声・既定）/ azure / elevenlabs / piper / edge（試し）
+windows_voice = ""            # Windows の声の名前の一部（例 "Zira"）。空なら最初の英語の声
+azure_voice = "en-US-AndrewNeural"
+azure_region = "japaneast"    # Azure のキーは .env の AzureSpeechKey（操作の窓で入れられる）
+elevenlabs_voice = "pNInz6obpgDQGcFmaJgB"   # ElevenLabs の声の ID。キーは .env の ElevenLabsKey
+elevenlabs_model = "eleven_flash_v2_5"
+piper_exe = ""                # Piper を使うとき: piper.exe と声のモデル（.onnx）の場所
+piper_model = ""
+rate = "+10%"                 # 読む速さ
+tts_gain = 1.0
+monitor_volume = 0.0          # 自分でも英語の声を聞くなら 0.3 など（流れている間は相手の声を拾わない）
+
+[asr]                         # 文字起こし（faster-whisper）
+device = "auto"               # auto: NVIDIA の GPU があれば cuda、無ければ cpu
+model = "large-v3-turbo"      # GPU のときのモデル（初回に models/ へ取る。約 1.6 GB）
+compute_type = "int8_float16"
+cpu_model = "small"           # CPU のときのモデル（約 0.5 GB）。遅ければ "base"
+cpu_compute_type = "int8"
+beam_size = 5
+
+[translate]                   # 訳（Claude。キーは .env の ClaudeAPIKey、操作の窓の「API キー」で入れる）
+model = "claude-haiku-5-5"
+effort = "low"
+thinking_off = true           # 考える時間を省いて速く返す
+context_lines = 6             # 直前の会話を何行渡すか
+glossary_json = ""            # プロファイルの用語集に足す英日の用語集（.json か「英語 = 日本語」の .txt）。足したい語は glossary.txt へ
+
+[overlay]                     # 字幕（ゲームの画面の上に、チャット欄のように会話を積んで出しつづける。ロック中はクリックがゲームへ通る）
+log_x = 0.012                 # 左端の位置（画面の幅に対する割合）
+log_bottom = 0.26             # 下端の画面の下からの高さ（画面の高さに対する割合）
+log_w = 0.30                  # 幅（画面の幅に対する割合）
+log_h = 0.30                  # 高さ（画面の高さに対する割合）
+font_size = 0.0175            # 訳の文字の高さ（画面の高さに対する割合。4K で約 38 px）
+src_size = 0.013              # 原文の文字の高さ
+show_source = true            # 原文（英語・自分の日本語）も小さく出す
+hold_s = 0                    # 0 なら消さない。秒数を書くと、その秒数たった発言を消す
+locked = true                 # ロック（クリックをゲームへ通す）。外すとドラッグで移動・右下の角で大きさ
+font = "Noto Sans JP"         # 無ければ Windows の既定の字に
+edit_key = "ctrl+alt+o"       # ロックを外す／ロックする
+quit_key = "ctrl+alt+q"       # 終了
+panel_key = "ctrl+alt+p"      # 操作の窓を前に出す
+# 動かした位置・大きさ・ロックは logs/state.json に残り、こちらより優先する

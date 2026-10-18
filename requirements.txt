@@ -1,0 +1,19 @@
+# Python で動かすとき（Windows・Python 3.13 で確かめた版）
+faster-whisper==1.2.1
+ctranslate2==4.6.1
+onnxruntime==1.23.2
+anthropic==0.78.0
+numpy==2.3.1
+scipy==1.18.1
+PyAudioWPatch==0.2.12.9
+pynput==1.8.1
+hidapi==0.15.0
+pywin32==311
+huggingface_hub==1.1.5
+# GPU で動かすとき（Python では pip のこれを使う。exe は初回に取る）
+nvidia-cudnn-cu12==9.16.0.29
+nvidia-cublas-cu12==12.9.2.10
+# 試し: Edge の読み上げ（公式に開かれた方法ではない）
+# edge-tts==7.3.1
+# exe を作るとき
+# pyinstaller==6.19.0

@@ -1,0 +1,24 @@
+# ARC Raiders 用の設定。ゲームを足すときは、このファイルを写して名前と中身を変える（ファイル名が id になる）。
+
+name = "ARC Raiders"                 # 画面に出す名前。訳すときにゲームの文脈として Claude に渡す
+exe = "PioneerGame.exe"              # ゲームの exe。字幕をこの画面に合わせ、送るキーはこれが前面のときだけ押す
+send_key = "b"                       # 近接ボイスチャットの「押して話す」キー（ARC の初期は B）
+glossary = ""                        # 英日の用語集（このフォルダの中のファイル名。.json か「英語 = 日本語」の .txt）
+prompt_ja = "ARC Raidersのボイスチャットでの会話。"  # 自分の日本語を文字にするときのヒント
+
+# 相手の英語を文字にするときのヒント（敵・マップ・武器など。多すぎると効きが薄れる）
+hotwords = "ARC Raiders, Speranza, raider, ARC, extract, Raider Hatch, Bastion, Bombardier, Leaper, Rocketeer, Sentinel, Snitch, Tick, Wasp, Hornet, Pop, Fireball, Surveyor, Spotter, Matriarch, Queen, Shredder, Harvester, Firefly, Dam Battlegrounds, Buried City, Spaceport, Blue Gate, Stella Montis, Ferro, Anvil, Stitcher, Kettle, Rattler, Arpeggio, Tempest, Venator, Torrente, Osprey, Hullcracker, Renegade, Bettina, Burletta, Hairpin, Il Toro, Vulcano, Jupiter, Equalizer, Aphelion, Bobcat, Zipline, defib, Adrenaline Shot, Shield Recharger, Scrappy, Snap Blast, Lure Grenade, Smoke Grenade, Barricade Kit"
+
+# ゲーム側の設定の早見表（操作の窓の「はじめに」に出る）
+setup = [
+  ["設定 → オーディオ → 入力デバイス（マイク）", "CABLE Output (VB-Audio Virtual Cable)"],
+  ["パーティボイスチャット", "オープンマイク"],
+  ["近接ボイスチャット", "プッシュ・トゥ・トーク（キーは B）"],
+  ["ボイスチャットの出力デバイス（VC だけを聞くとき）", "CABLE-A Input (VB-Audio Cable A)"],
+  ["画面モード", "ボーダーレスかウィンドウ（排他的フルスクリーンだと字幕が隠れる）"],
+]
+notes = [
+  "ARC はマイク 1 本でオープンマイクにできるのがパーティか近接の片方だけ。パーティをオープンマイク、近接を押して話す（B）にして、英語の声の間だけツールが B を押す。",
+  "ツールを閉じている間はゲームにマイクが届かない。使わない日はゲームの入力デバイスをヘッドセットのマイクに戻す。",
+  "VC の出力を CABLE-A にした日は、ツールを閉じると VC が聞こえない。使わない日は出力をヘッドセットに戻す。",
+]

@@ -1,0 +1,20 @@
+# 使う人の物（キー・記録・録音・取ったモデル）は出さない
+.env
+.env.*
+logs/
+models/
+runtime/
+
+# 作った物
+build/
+dist/
+build_tools/version.txt
+build_tools/build.log
+build_tools/icon_preview.png
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# ゲームの用語集（公開してよいと決めた物だけ外す）
+profiles/*.json
+profiles/*.local.*
